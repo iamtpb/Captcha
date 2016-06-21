@@ -30,7 +30,7 @@ public class Captcha {
 
         mainPanel = new JPanel();
         label_title = new JLabel("Captcha");
-        captchaOverlayPanel = new CaptchaOverlayPanel("lolololololol");
+        captchaOverlayPanel = new CaptchaOverlayPanel("AbX6Y");
         button_submit = new JButton("Submit");
         button_submit.addActionListener(new Event_Submitted()); //Button Handler
 

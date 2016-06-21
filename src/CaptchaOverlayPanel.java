@@ -3,13 +3,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Random;
 
 public class CaptchaOverlayPanel extends JPanel {
     private BufferedImage bg;
-
+    private Random random;
     public CaptchaOverlayPanel(String cText) {
         try {
-            bg = ImageIO.read(new File("src//img1.png"));
+            bg = ImageIO.read(new File("src//img3.png"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -27,7 +28,7 @@ public class CaptchaOverlayPanel extends JPanel {
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(bg, 10, 20, null);
+        g.drawImage(bg, 0, 0, null);
     }
 
     private BufferedImage process(BufferedImage oldImage, String cText) {
@@ -39,21 +40,43 @@ public class CaptchaOverlayPanel extends JPanel {
                 w, h, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2d = img.createGraphics();
-        g2d.drawImage(oldImage, 10, 20, null);
+        g2d.drawImage(oldImage, 0, 0, null);
 
         g2d.setPaint(Color.red);
-        g2d.setFont(new Font("Serif", Font.BOLD, 20));
-
 
         FontMetrics fm = g2d.getFontMetrics();
 
-        int x = img.getWidth() - fm.stringWidth(cText) - 5;
-        int y = fm.getHeight();
+        int x = (int) (img.getWidth() / 2 - fm.stringWidth(cText) / 1.3);
+        int y = (int) (img.getHeight() / 1.5 - fm.getHeight() / 1.5);
+        int offsetX = 0, offsetY = 0;
+        for (int i = 0; i < cText.length(); i++) {
+            char Char = cText.charAt(i);
 
-        g2d.drawString(cText, x, y);
+            g2d.setFont(new Font("Serif", Font.ITALIC, randomizeFontSize()));
+            g2d.drawString(String.valueOf(Char), x + offsetX, y + offsetY);
+            offsetX += fm.charWidth(Char) + randomizeX();
+            offsetY += randomizeY();
+        }
         g2d.dispose();
 
         return img;
     }
 
+    private int randomizeFontSize() {
+        random = new Random();
+        int r_fontsize = random.nextInt(30 - 15 + 1);
+        return r_fontsize + 15;
+    }
+
+    private int randomizeX() {
+        random = new Random();
+        int r_x = random.nextInt(11);
+        return r_x - 3;
+    }
+
+    private int randomizeY() {
+        random = new Random();
+        int r_y = random.nextInt(20);
+        return r_y - 10;
+    }
 }
