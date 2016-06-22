@@ -11,7 +11,7 @@ public class Captcha {
     int tries = 0, time = 0;
     JFrame mainWindow;
     JPanel mainPanel;
-    JLabel label_title, button_reset, label_msg;
+    JLabel label_title, button_reset, label_msg, label_cnt;
     JTextField tf_input;
     JButton button_submit;
     CaptchaOverlayPanel captchaOverlayPanel;
@@ -20,10 +20,7 @@ public class Captcha {
     }
 
     public Captcha(){
-
         init();
-
-
     }
 
     public void init(){
@@ -34,6 +31,7 @@ public class Captcha {
         mainWindow.setResizable(false);
         mainPanel = new JPanel();
         label_title = new JLabel("Captcha");
+        label_cnt = new JLabel();
         captchaOverlayPanel = new CaptchaOverlayPanel();
         button_submit = new JButton("Submit");
         button_submit.addActionListener(new Event_Submitted()); //Button Handler
@@ -57,10 +55,16 @@ public class Captcha {
         label_msg = new JLabel("Enter Text:");
 
         JPanel tx_reset = new JPanel();
+        JPanel tx_txt = new JPanel();
         // tx_reset.setMaximumSize(new Dimension(300,20));
+        tx_txt.setLayout(new BoxLayout(tx_txt, BoxLayout.X_AXIS));
+        tx_txt.add(button_submit);
+        tx_txt.add(label_cnt);
+
         tx_reset.setLayout(new BoxLayout(tx_reset, BoxLayout.X_AXIS));
         tx_reset.add(tf_input);
         tx_reset.add(button_reset);
+
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         //Fix Alignment
@@ -76,8 +80,8 @@ public class Captcha {
         mainPanel.add(captchaOverlayPanel);
         // mainPanel.add(tf_input);
         mainPanel.add(tx_reset);
-        mainPanel.add(button_submit);
-
+        //mainPanel.add(button_submit);
+        mainPanel.add(tx_txt);
         mainWindow.add(mainPanel);
         mainWindow.pack();
         mainWindow.setVisible(true);
@@ -103,9 +107,12 @@ public class Captcha {
                 e.printStackTrace();
             }
 
+        } else {
+            // label_cnt.setText(x+" fair Attempts Left ");
         }
 
     }
+
     private class Event_Submitted implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -115,6 +122,21 @@ public class Captcha {
                 System.out.println("Entered: " + tf_input.getText());
                 if (captchaOverlayPanel.getSecret().equals(tf_input.getText())) {
                     System.out.println("Checked!");
+                    UserPanel userPanel = new UserPanel();
+                    JButton btn_logout = new JButton("Logout Now");
+                    btn_logout.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            mainWindow.dispose();
+                            init();
+                        }
+                    });
+                    userPanel.add(btn_logout);
+                    mainPanel.removeAll();
+                    mainPanel.add(userPanel);
+
+                    mainWindow.revalidate();
+                    mainWindow.repaint();
                 } else {
                     tries++;
                     check();
