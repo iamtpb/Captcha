@@ -78,9 +78,7 @@ public class Captcha {
 
         mainPanel.add(label_title);
         mainPanel.add(captchaOverlayPanel);
-        // mainPanel.add(tf_input);
         mainPanel.add(tx_reset);
-        //mainPanel.add(button_submit);
         mainPanel.add(tx_txt);
         mainWindow.add(mainPanel);
         mainWindow.pack();
@@ -112,6 +110,10 @@ public class Captcha {
         }
 
     }
+    public void refresh(){
+        mainWindow.revalidate();
+        mainWindow.repaint();
+    }
 
     private class Event_Submitted implements ActionListener {
         @Override
@@ -134,15 +136,13 @@ public class Captcha {
                     userPanel.add(btn_logout);
                     mainPanel.removeAll();
                     mainPanel.add(userPanel);
-
-                    mainWindow.revalidate();
-                    mainWindow.repaint();
+                    refresh();
+                    
                 } else {
                     tries++;
                     check();
                 }
-                //mainWindow.remove(mainPanel);
-                mainWindow.repaint();
+               refresh();
             }
         }
     }
